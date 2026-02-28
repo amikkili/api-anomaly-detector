@@ -18,4 +18,4 @@ ML system that monitors MuleSoft APIs in real time, detects anomalies with 98.7%
 **Data:** Pandas · NumPy · Feature Engineering  
 
 ### Connect
-**LinkedIn:** linkedin.com/in/amikkili
+- LinkedIn → [linkedin.com/in/amikkili](https://www.linkedin.com/in/anil-mikkili-97b97563/)
