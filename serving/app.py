@@ -45,8 +45,15 @@ scaler      = None
 @app.on_event("startup")
 def load_model():
     global model, scaler
-    model_path  = os.path.join(MODEL_DIR, "isolation_forest.pkl")
-    scaler_path = os.path.join(MODEL_DIR, "scaler.pkl")
+
+    # Use absolute path relative to this file — works in Docker + locally
+    base_dir    = os.path.dirname(os.path.abspath(__file__))
+    model_path  = os.path.join(base_dir, "model", "isolation_forest.pkl")
+    scaler_path = os.path.join(base_dir, "model", "scaler.pkl")
+
+    print(f"[INFO] Loading model from: {model_path}")
+    print(f"[INFO] Model exists: {os.path.exists(model_path)}")
+    print(f"[INFO] Scaler exists: {os.path.exists(scaler_path)}")
 
     try:
         with open(model_path,  "rb") as f: model  = pickle.load(f)
@@ -54,9 +61,8 @@ def load_model():
         print("[READY] Model and scaler loaded successfully")
     except FileNotFoundError as e:
         print(f"[ERROR] Model file not found: {e}")
-        print("[ERROR] Run training/train_model.py first!")
-
-
+    except Exception as e:
+        print(f"[ERROR] Failed to load model: {e}")
 # -----------------------------------------------------------------------------
 # REQUEST SCHEMA — Pydantic model
 # This is like a DataWeave schema definition — it validates every field
@@ -256,3 +262,4 @@ def predict_batch(records: List[APIMetrics]):
         anomaly_rate_pct = round(anomaly_count / len(results) * 100, 2),
         results          = results
     )
+    

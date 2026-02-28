@@ -48,4 +48,4 @@ ENV PYTHONUTF8=1
 # Without 0.0.0.0, the API only accepts connections from inside the container
 # workers=2 handles concurrent requests without crashing on free tier
 # ─────────────────────────────────────────────────────────────────────────────
-CMD ["uvicorn", "serving.app:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2"]
+CMD ["sh", "-c", "uvicorn serving.app:app --host 0.0.0.0 --port ${PORT:-8000}"]
