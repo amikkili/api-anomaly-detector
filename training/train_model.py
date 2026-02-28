@@ -11,7 +11,9 @@ Key concepts:
 
 Run: python training/train_model.py
 """
-
+import sys
+import io
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 import pandas as pd
 import numpy as np
 import pickle
