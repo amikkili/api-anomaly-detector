@@ -62,29 +62,7 @@ jobs:
 
     steps:
       - name: Trigger Render Deployment
-        run: |
-          curl -s -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}" \
-            -w "\nHTTP Status: %{http_code}" \
-            --fail
+        run: curl -s -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}" -w "\nHTTP Status %{http_code}" --fail
 
       - name: Deployment triggered
         run: echo "Deployment triggered successfully"
-```
-
----
-
-## Critical YAML Rules to Check
-```
-RULE 1 — "on:" must be at column 0 (no spaces before it)
-RULE 2 — No tabs anywhere — only spaces
-RULE 3 — "jobs:" must be at column 0
-RULE 4 — Indentation must be exactly 2 spaces per level
-```
-
----
-
-## Verify in VS Code Before Pushing
-
-Install the **YAML extension** in VS Code:
-```
-Extensions → search "YAML" → RedHat YAML → Install
