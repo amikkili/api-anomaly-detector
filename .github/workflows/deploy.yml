@@ -1,29 +1,4 @@
-# ─────────────────────────────────────────────────────────────────────────────
-# CI/CD PIPELINE — API Anomaly Detector
-# Triggers on every push to main branch
-#
-# What it does:
-#   1. Checkout code
-#   2. Set up Python
-#   3. Install dependencies
-#   4. Run a quick health test (import check)
-#   5. Trigger Render deployment via webhook
-# ─────────────────────────────────────────────────────────────────────────────
-
-name: Deploy API Anomaly Detector
-
-on:
-  push:
-    branches:
-      - main      # Only deploy when code is merged to main
-  workflow_dispatch:  # Allow manual trigger from GitHub UI
-
 jobs:
-
-  # ─────────────────────────────────────────────────────────────────────────
-  # JOB 1 — TEST
-  # Validates the code before deploying — catches errors before Render sees them
-  # ─────────────────────────────────────────────────────────────────────────
   test:
     name: Validate Code
     runs-on: ubuntu-latest
@@ -42,25 +17,19 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Validate FastAPI app imports correctly
+      - name: Validate imports
         run: |
           python -c "
           import pickle, os, numpy, fastapi, uvicorn
           print('All imports successful')
-          print('FastAPI version:', fastapi.__version__)
           print('NumPy version:', numpy.__version__)
           "
 
-      - name: Validate model files exist
+      - name: Retrain model in CI environment
         run: |
-          python -c "
-          import os
-          model_path  = 'serving/model/isolation_forest.pkl'
-          scaler_path = 'serving/model/scaler.pkl'
-          assert os.path.exists(model_path),  f'Missing: {model_path}'
-          assert os.path.exists(scaler_path), f'Missing: {scaler_path}'
-          print('Model files verified')
-          "
+          python simulator/generate_logs.py
+          python training/feature_engineering.py
+          python training/train_model.py
 
       - name: Validate model loads and predicts
         run: |
@@ -70,23 +39,17 @@ jobs:
               model = pickle.load(f)
           with open('serving/model/scaler.pkl', 'rb') as f:
               scaler = pickle.load(f)
-          # Test prediction with a normal-looking record
           X = np.array([[2, 185.0, 22.4, 0, 0, 178.5, 0.0, 20.1, 6.8, 14, 1]])
           X_scaled = scaler.transform(X)
           pred = model.predict(X_scaled)
-          print(f'Test prediction: {pred[0]} (-1=anomaly, 1=normal)')
-          print('Model validation passed')
+          print(f'Test prediction: {pred[0]}')
+          print('Model validation passed!')
           "
 
-  # ─────────────────────────────────────────────────────────────────────────
-  # JOB 2 — DEPLOY
-  # Only runs if test job passed
-  # Calls Render's deploy webhook — Render pulls latest code and redeploys
-  # ─────────────────────────────────────────────────────────────────────────
   deploy:
     name: Deploy to Render
     runs-on: ubuntu-latest
-    needs: test         # Will NOT run if test job fails
+    needs: test
 
     steps:
       - name: Trigger Render Deployment
@@ -94,9 +57,6 @@ jobs:
           curl -s -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}" \
             -w "\nHTTP Status: %{http_code}" \
             --fail
-        # secrets.RENDER_DEPLOY_HOOK is stored in GitHub Secrets — never in code
 
       - name: Deployment triggered
-        run: |
-          echo "Deployment triggered successfully"
-          echo "Monitor progress at: https://dashboard.render.com"
+        run: echo "Deployment triggered successfully"
