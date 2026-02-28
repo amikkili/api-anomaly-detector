@@ -1,0 +1,10 @@
+artifact_location: file:C:/Users/DELL/Desktop/AI-ML-Projects/api-anomaly-detector/mlruns/967917713633862146/models/m-040465af3afa4771a115f2a62de4e9ea/artifacts
+creation_timestamp: 1772235789838
+experiment_id: '967917713633862146'
+last_updated_timestamp: 1772235796477
+model_id: m-040465af3afa4771a115f2a62de4e9ea
+model_type: null
+name: isolation_forest
+source_run_id: b98229112c974249b1790d212e26b7bf
+status: 2
+status_message: null

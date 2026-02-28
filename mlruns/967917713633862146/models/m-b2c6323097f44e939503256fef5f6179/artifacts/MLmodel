@@ -1,0 +1,23 @@
+artifact_path: file:C:/Users/DELL/Desktop/AI-ML-Projects/api-anomaly-detector/mlruns/967917713633862146/models/m-b2c6323097f44e939503256fef5f6179/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.14.3
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.8.0
+    skops_trusted_types: null
+mlflow_version: 3.10.0
+model_id: m-b2c6323097f44e939503256fef5f6179
+model_size_bytes: 940894
+model_uuid: m-b2c6323097f44e939503256fef5f6179
+prompts: null
+run_id: b4b2feb29ed44ed790721d299ff409d5
+utc_time_created: '2026-02-27 23:41:56.255915'

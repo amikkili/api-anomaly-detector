@@ -1,0 +1,14 @@
+artifact_uri: file:C:/Users/DELL/Desktop/AI-ML-Projects/api-anomaly-detector/mlruns/967917713633862146/6adbe77331494856827b0630c9c3c36c/artifacts
+end_time: 1772235997157
+entry_point_name: ''
+experiment_id: '967917713633862146'
+lifecycle_stage: active
+run_id: 6adbe77331494856827b0630c9c3c36c
+run_name: isolation_forest_v1
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1772235989700
+status: 3
+tags: []
+user_id: DELL
